@@ -4,7 +4,7 @@ import { ShoppingListComponent } from './shopping-list.component';
 import { ShoppingEditComponent } from './shopping-edit/shopping-edit.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ShareModule } from '../shared/share.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [ShoppingListComponent, ShoppingEditComponent],
@@ -16,7 +16,7 @@ import { ShareModule } from '../shared/share.module';
         component: ShoppingListComponent,
       },
     ]),
-    ShareModule,
+    SharedModule,
   ],
 })
 export class ShoppingListModule {}
