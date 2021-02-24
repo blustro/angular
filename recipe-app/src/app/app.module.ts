@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core.module';
@@ -25,6 +26,7 @@ import { AuthEffects } from './auth/store/auth.effects';
     BrowserAnimationsModule,
     HttpClientModule,
     BsDropdownModule.forRoot(),
+    StoreRouterConnectingModule.forRoot(),
     SharedModule,
     CoreModule,
     StoreModule.forRoot(fromApp.appReducer),
