@@ -1,14 +1,13 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { throwError, BehaviorSubject } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { User } from './user.model';
 import * as fromApp from '../store/app.reducer';
 import * as AuthActions from './store/auth.actions';
-import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
 
 export interface AuthResponseData {
   idToken: string;
@@ -19,11 +18,9 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  user = new BehaviorSubject<User>(null);
+  // user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
 
   constructor(
@@ -78,7 +75,7 @@ export class AuthService {
       );
   }
 
-  autologin() {
+  autoLogin() {
     const userData: {
       email: string;
       id: string;
@@ -90,17 +87,16 @@ export class AuthService {
     }
 
     const loadedUser = new User(
-      userData.id,
       userData.email,
+      userData.id,
       userData._token,
       new Date(userData._tokenExpirationDate)
     );
 
     if (loadedUser.token) {
       // this.user.next(loadedUser);
-
       this.store.dispatch(
-        new AuthActions.Login({
+        new AuthActions.AuthenticateSuccess({
           email: loadedUser.email,
           userId: loadedUser.id,
           token: loadedUser.token,
@@ -110,7 +106,7 @@ export class AuthService {
       const expirationDuration =
         new Date(userData._tokenExpirationDate).getTime() -
         new Date().getTime();
-      this.autologout(expirationDuration);
+      this.autoLogout(expirationDuration);
     }
   }
 
@@ -125,7 +121,7 @@ export class AuthService {
     this.tokenExpirationTimer = null;
   }
 
-  autologout(expirationDuration: number) {
+  autoLogout(expirationDuration: number) {
     this.tokenExpirationTimer = setTimeout(() => {
       this.logout();
     }, expirationDuration);
@@ -140,34 +136,33 @@ export class AuthService {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     // this.user.next(user);
     const user = new User(email, userId, token, expirationDate);
-
     this.store.dispatch(
-      new AuthActions.Login({
+      new AuthActions.AuthenticateSuccess({
         email: email,
         userId: userId,
         token: token,
         expirationDate: expirationDate,
       })
     );
-    this.autologout(expiresIn * 1000);
+    this.autoLogout(expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));
   }
 
   private handleError(errorRes: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
-
     if (!errorRes.error || !errorRes.error.error) {
-      throwError(errorMessage);
+      return throwError(errorMessage);
     }
     switch (errorRes.error.error.message) {
       case 'EMAIL_EXISTS':
-        errorMessage = 'This email exists already.';
+        errorMessage = 'This email exists already';
         break;
       case 'EMAIL_NOT_FOUND':
         errorMessage = 'This email does not exist.';
         break;
       case 'INVALID_PASSWORD':
-        errorMessage = 'This password is incorrect.';
+        errorMessage = 'This password is not correct.';
+        break;
     }
     return throwError(errorMessage);
   }

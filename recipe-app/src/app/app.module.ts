@@ -14,6 +14,8 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 
 import * as fromApp from './store/app.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './auth/store/auth.effects';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -26,6 +28,7 @@ import * as fromApp from './store/app.reducer';
     SharedModule,
     CoreModule,
     StoreModule.forRoot(fromApp.appReducer),
+    EffectsModule.forRoot([AuthEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent],
