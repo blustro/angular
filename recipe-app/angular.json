@@ -142,7 +142,14 @@
           "options": {
             "outputPath": "dist/recipe-app/server",
             "main": "server.ts",
-            "tsConfig": "tsconfig.server.json"
+            "tsConfig": "tsconfig.server.json",
+            "externalDependencies": [
+              "@nestjs/microservices",
+              "@nestjs/microservices/microservices-module",
+              "@nestjs/websockets",
+              "@nestjs/websockets/socket-module",
+              "cache-manager"
+            ]
           },
           "configurations": {
             "production": {
@@ -154,7 +161,7 @@
                 }
               ],
               "sourceMap": false,
-              "optimization": true
+              "optimization": false
             }
           }
         },
